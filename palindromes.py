@@ -113,6 +113,7 @@ def extend(palindrome):
     else: # i.e. add to left
         # Generate 'extenders' that complete the stub:
         extenders = [word for word in WORD_LIST if word.endswith(old_stub)]
+        random.shuffle(extenders)
         # For each one, reflect it and create a new palindrome
         for extender in extenders:
             new_stub = reverse(extender[:len(extender)-len(old_stub)])
@@ -126,7 +127,7 @@ def extend(palindrome):
                 dromes.append(new_pal)
             elif new_pal.length() < MAX_LENGTH:
                 extensions.append(new_pal)
-    random.shuffle(extensions) 
+     
     return extensions
 
 def palindrome_search(pal_list):
@@ -141,38 +142,82 @@ def palindrome_search(pal_list):
     random.shuffle(new_list)
     return new_list
 
-def begin_palindrome(seed):
+def choose_from_seed(seed):
+    """
+    Allow user to choose an initial palindrome based on their given seed.
+    """
+    
+    seed_length = len(seed)
+    # Find the positions (pivots) at which the seed could be reflected.
+    # e.g., 'omelette' could be reflected as 'omelette lemo...' (pivot at 4)
+    # or 'omelette ttelemo...' (pivot at 7)
+    left_pivots = [0] + [x for x in range(seed_length) \
+                   if seed[:x] == seed[x-1::-1]]
+    right_pivots = [(seed_length-x) for x in range(seed_length) \
+                  if seed[x:] == seed[:x-1:-1]] + [0]
+    # Create list of palindrome starters using the pivots.
+    pals = []
+    for x in right_pivots:
+        stub_length = seed_length - x
+        stub = reverse(seed[:stub_length])
+        text = seed + ' ' + stub 
+        pals.append(Palindrome(text, stub, True))
+    for x in left_pivots:
+        stub_length = seed_length - x
+        stub = reverse(seed[len(seed)-stub_length:])
+        text = stub + ' ' + seed
+        pals.append(Palindrome(text, stub, False))
+    message = 'Using that seed, the palindrome could center around any of these:'
+    print(message)
+    for i, pal in enumerate(pals):
+        print(str(i+1) + '.  ...' + pal.text + '...')
+    choice = 0
+    while True:
+        try:
+            message = 'Choose a number from 1 to ' + str(len(pals)) + ': '
+            choice = int(input(message))
+            if choice <= 0:
+                raise ValueError
+            pal = pals[int(choice-1)]
+            break
+        except (ValueError, IndexError):
+            print('Not a valid selection. Please try again.')
+    return pal
+    
+    
+def begin_palindrome():
     """
     Set up an initial palindrome from a seed word.
     """
     global out_file
     seed = input("Give a seed word for the palindrome: ")
-    # from left: [x for x in range(len(a)) if a[:x]==a[x-1::-1]]
-    # from right: [(len(a)-x) for x in range(len(a)) if a[x:]==a[:x-1:-1]]
-    """
-    seed = "cat"
-    stub_length = 3 # Indicates number of letters that will be reflected.
-    add_to_right = True # Whether stub is on the right (left if False)
-    """
+    initial_pal = choose_from_seed(seed)
     out_filename = seed + "_dromes.txt"
     out_file = open(out_filename,"w")
     out_file.write("Seed: " + seed + "\n")
-    if add_to_right:
-        stub = reverse(seed[:stub_length])
-        text = seed + ' ' + stub
-    else:
-        stub = reverse(seed[len(seed)-stub_length:])
-        text = stub + ' ' + seed
-    return Palindrome(text, stub, add_to_right)
+    return initial_pal
 
-
-MAX_LENGTH = 4 # Max number of words in a palindrome (to avoid infinite recursion).
+def set_max_length():
+    """
+    Set max number of words in a palindrome (to avoid infinite recursion).
+    """
+    print('What is the maximum number of words you want in a palindrome?')
+    print('(Careful!  Things can get out of hand quickly...)')
+    while True:
+        try:
+            max_words = int(input('Max words: '))
+            break
+        except ValueError:
+            print('Try again...')
+    return max_words
+ 
 WORD_FILE = "shortlist_words.txt" # Filename of dictionary file.
 WORD_LIST = load_words(WORD_FILE)
  
 dromes =[]
 pal = begin_palindrome()
-print(pal.text)
+MAX_LENGTH = set_max_length()
+print('Generating palindromes from "...' + pal.text + '...":')
 pal_list = [pal]
 while len(pal_list) > 0:
     pal_list = palindrome_search(pal_list)
