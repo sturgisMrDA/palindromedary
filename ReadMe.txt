@@ -1,39 +1,23 @@
-Word list taken from http://www-01.sil.org/linguistics/wordlists/english/
+Palindromedary: The two-humped repeater.
+A palindrome generator by Aaron Dunigan-AtLee
+August 2017
 
-2-Dec-2005
+Form palindromic phrases by the following procedure:
+1. Choose a seed word.  For example, 'omelette.'
+2. This seed word will form the center of the palindrome, but there are multiple ways to do this.  For example, the center could be:
+	... omelette lemo... 
+	... omelette ttelemo... (except no word starts that way)
+	... omelette ettelemo... (ditto)
+Each of these phrases 'pivots' at a different letter.
+3. Once you have chosen a pivot, note that one end of the would-be palindrome is an incomplete word (such as 'lemo...' above).   We will call this a 'stub.'  List all the words that can complete this stub (e.g. lemon, lemons, lemonade).
+4. For each word that completes the stub, reflect the word around to the other end of the phrase.  For example, if we complete 'omelette lemo...' with 'lemonade,' we now have the text '...edan omelette lemonade,' and '...edan' is the stub.
+5. Note that some stubs can be split into complete words and a shorter stub.  '...edan' could also be '...ed an,' so our work-in-progress is:
+	'...ed an omelette lemonade ...'
+6. Continue this process recursively until the stub is a complete word, in which case the palindrome is a complete phrase (though not necessarily one that makes grammatical sense).
 
-The four files mentioned below were combined in the file wordsEn.txt. 
+Run the program palindromes.py.  You give the program a seed word and then choose a pivot point.  Then it generates as many palindromes as it can up to the maximum word count.  
 
-SIL International Linguistics Department
-7500 W. Camp Wisdom Road
-Dallas, TX  75236
-U.S.A.
-______________________________________________________
+You may find the output gets excessive.  Use Ctrl+C to cancel the program.
 
-Dallas, TX
-6-Sep-91
-
-This is a list of over 100,000 English words transcribed
-orthographically. I obtained it from The Interociter bulletin
-board in Dallas (214/258-1832). The original read.me file said
-that the list came from Public Brand Software.
-
-The original list contained 146,440 words, but I discovered that
-there were thousands of duplicate words. I resorted the list and
-removed the duplicates using the Unix utility uniq. The total
-number of words is now 109,582. I have repackaged the list into
-four files (the original was five):
-
-     File         Bytes    Words   Range
-     ---------    ------   -----   -----
-     words1.lst   315376   29839   A-D
-     words2.lst   242484   23101   E-K
-     words3.lst   325716   30439   L-R
-     words4.lst   270759   26203   S-Z
-                  ----------------
-     Total       1154335  109582
-
-This word list includes inflected forms, such as plural nouns and
-the -s, -ed and -ing forms of verbs. Thus the number of lexical stems
-represented in the list is considerably smaller than the total
-number of words.
+Enjoy!
+  

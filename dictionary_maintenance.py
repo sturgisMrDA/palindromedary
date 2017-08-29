@@ -1,8 +1,13 @@
 """
 Dictionary maintenance for palindromes.py
 Aaron D.A., July 2017
-specify dictionary file and file of words to be removed.
+Run this program to remove multiple words from the dictionary file
+being used with Palindromes.
 """
+
+WORD_FILE = "shortlist_words.txt" # Filename of dictionary file.
+REMOVAL_FILE = "to_remove.txt" # Filename with words to be removed from dictionary.
+
 def load_words(file_name):
     """Load the dictionary file and store it in a list"""
     words =[]
@@ -23,15 +28,8 @@ def remove_from_dict(word):
     else:
         print('"' + word +'"' + ' is not in the dictionary.')
 
-WORD_FILE = "shortlist_words.txt" # Filename of dictionary file.
 WORD_LIST = load_words(WORD_FILE)
-with open("to_remove.txt",'r') as removal_file:
+with open(REMOVAL_FILE,'r') as removal_file:
     for line in removal_file:
         remove_from_dict(line.strip())
     removal_file.close()
-"""
-open the file of words to remove and give it a variable name
-for each word in the file,
-delete it from the word list variable
-then copy the new list back into the file
-"""

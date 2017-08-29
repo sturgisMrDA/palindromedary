@@ -4,8 +4,14 @@ by Aaron Dunigan-AtLee
 July 2017
 """
 import random
+WORD_FILE = "shortlist_words.txt" # Filename of dictionary file to be used.
 
 class Palindrome:
+    """
+    The Palindrome class; includes a text string,
+    a stub (the part of the text that is an incomplete
+    word), and whether the stub is on the right or the left.
+    """
     def __init__(self, text, stub, add_to_right):
         self.text = text
         self.stub = stub
@@ -81,6 +87,7 @@ def partitions(palindrome):
                     dromes.append(new_pal)
                 elif new_pal.length() < MAX_LENGTH:
                     parts += partitions(new_pal)
+    # Shuffle to avoid really repetitive output.
     random.shuffle(parts)
     return parts
 
@@ -146,7 +153,6 @@ def choose_from_seed(seed):
     """
     Allow user to choose an initial palindrome based on their given seed.
     """
-    
     seed_length = len(seed)
     # Find the positions (pivots) at which the seed could be reflected.
     # e.g., 'omelette' could be reflected as 'omelette lemo...' (pivot at 4)
@@ -211,9 +217,8 @@ def set_max_length():
             print('Try again...')
     return max_words
  
-WORD_FILE = "shortlist_words.txt" # Filename of dictionary file.
-WORD_LIST = load_words(WORD_FILE)
- 
+# Main code.
+WORD_LIST = load_words(WORD_FILE) 
 dromes =[]
 pal = begin_palindrome()
 MAX_LENGTH = set_max_length()
